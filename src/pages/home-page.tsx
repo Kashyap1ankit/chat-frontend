@@ -1,6 +1,45 @@
 import { Bell, Keyboard, MessagesSquare } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useWebSocket from "react-use-websocket";
+import { v4 as uuidv4 } from "uuid";
 
 export default function HomePage() {
+  const [socketUrl, setSocketUrl] = useState("ws://localhost:5000");
+
+  const { sendMessage, lastMessage, getWebSocket } = useWebSocket(socketUrl);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const payload = {
+      message: "establish",
+      payload: {
+        message: "Established",
+      },
+    };
+    sendMessage(JSON.stringify(payload));
+  }, []);
+
+  async function handleCreateRoom() {
+    const payload = {
+      message: "create",
+      id: uuidv4(),
+      username: "Ronit",
+    };
+
+    sendMessage(JSON.stringify(payload));
+  }
+
+  useEffect(() => {
+    if (lastMessage) {
+      const data = JSON.parse(lastMessage.data);
+      if (data.id) {
+        navigate(`room/join/${data.id}`);
+      }
+    }
+  }, [lastMessage]);
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex flex-col gap-8  w-1/2">
@@ -15,7 +54,10 @@ export default function HomePage() {
         </div>
 
         <div className="flex gap-6 items-center">
-          <button className="border-0 px-8 py-4 text-white font-bold rounded-full bg-primary-btn flex items-center gap-2 font-heebo cursor-pointer">
+          <button
+            className="border-0 px-8 py-4 text-white font-bold rounded-full bg-primary-btn flex items-center gap-2 font-heebo cursor-pointer"
+            onClick={handleCreateRoom}
+          >
             <MessagesSquare />
             <p>Create Room</p>
           </button>
