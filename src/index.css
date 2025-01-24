@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  /* color  */
+
+  --color-secondary-bg: #1c1938;
+  --color-primary-bg: #0f0d16;
+  --color-primary-btn: #565fe5;
+  --color-secondary-btn: #c4b5fd;
+
+  /* font family */
+
+  --font-signika: "Signika", "serif";
+  --font-heebo: "Heebo", "serif";
+}
