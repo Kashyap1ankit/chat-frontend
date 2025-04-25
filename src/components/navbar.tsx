@@ -1,6 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Navbar() {
+  const { isPending, data } = useAuth();
+
+  if (isPending) {
+    return <div>Loading</div>;
+  }
+
   return (
     <div>
       <div className="flex justify-between py-4 px-16 fixed top-0 w-full   ">
@@ -14,6 +21,9 @@ export default function Navbar() {
           {[
             { title: "Join", link: "/join" },
             { title: "Create", link: "/Create" },
+            data?.data
+              ? { title: "Logout", link: `http://localhost:5000/auth/logout` }
+              : { title: "Login", link: `http://localhost:5000/auth/google` },
           ].map((e, i) => {
             return (
               <Link

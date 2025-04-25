@@ -3,13 +3,25 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../hooks/useAuth";
+
+interface requestType {
+  isPending: boolean;
+  isError: boolean;
+  data: {
+    data: any;
+    status: number;
+  };
+}
 
 export default function HomePage() {
-  const [socketUrl, setSocketUrl] = useState("ws://localhost:5000");
+  const [socketUrl, setSocketUrl] = useState("ws://localhost:5000"); //eslint-disable-line
 
-  const { sendMessage, lastMessage, getWebSocket } = useWebSocket(socketUrl);
+  const { sendMessage, lastMessage, getWebSocket } = useWebSocket(socketUrl); //eslint-disable-line
 
   const navigate = useNavigate();
+
+  const { isPending, isError, data }: requestType = useAuth();
 
   useEffect(() => {
     const payload = {
