@@ -2,13 +2,53 @@ import { Bell, Keyboard, MessagesSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../hooks/useAuth";
+import { useUserStore } from "../store/store";
 
 export default function HomePage() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  useAuth();
+  const [socketUrl, setSocketUrl] = useState(
+    import.meta.env.VITE_BACKEND_WEBSOCKET_URL
+  );
+
+  const [response, setResponse] = useState<
+    | {
+        status: number;
+        message: string;
+        roomId: string;
+      }
+    | {}
+  >({});
+
+  const { currentUser } = useUserStore();
+
+  const {
+    sendJsonMessage,
+    lastJsonMessage,
+  }: {
+    sendJsonMessage: any;
+    lastJsonMessage: {
+      status: number;
+      message: string;
+      roomId: string;
+    };
+  } = useWebSocket(socketUrl);
+
+  function handleCreateRoom() {
+    sendJsonMessage({
+      type: "create",
+      data: {
+        userId: currentUser?.id,
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (lastJsonMessage && lastJsonMessage.status === 200) {
+      navigate(`/room/new/${lastJsonMessage.roomId}`);
+    }
+  }, [lastJsonMessage]);
 
   return (
     <div className="flex justify-between items-center">
@@ -24,7 +64,10 @@ export default function HomePage() {
         </div>
 
         <div className="flex gap-6 items-center">
-          <button className="border-0 px-8 py-4 text-white font-bold rounded-full bg-primary-btn flex items-center gap-2 font-heebo cursor-pointer">
+          <button
+            className="border-0 px-8 py-4 text-white font-bold rounded-full bg-primary-btn flex items-center gap-2 font-heebo cursor-pointer"
+            onClick={handleCreateRoom}
+          >
             <MessagesSquare />
             <p>Create Room</p>
           </button>
