@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <div>
-      <div className="flex justify-between py-4 px-16 fixed top-0 w-full   ">
+      <div className="flex justify-between py-4 px-16 fixed top-0 w-full z-20  border-b border-b-gray-800 backdrop-blur-xl   ">
         <div>
           <p className="text-white font-bold italic text-2xl font-signika">
             ChitChat
@@ -41,7 +41,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      <Outlet />
+      <div className="pt-16 ">
+        <Outlet />
+      </div>
     </div>
   );
 }

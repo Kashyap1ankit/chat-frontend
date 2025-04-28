@@ -2,24 +2,12 @@ import { Bell, Keyboard, MessagesSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import { useAuth } from "../hooks/useAuth";
 import { useUserStore } from "../store/store";
 
 export default function HomePage() {
   const navigate = useNavigate();
 
-  const [socketUrl, setSocketUrl] = useState(
-    import.meta.env.VITE_BACKEND_WEBSOCKET_URL
-  );
-
-  const [response, setResponse] = useState<
-    | {
-        status: number;
-        message: string;
-        roomId: string;
-      }
-    | {}
-  >({});
+  const [socketUrl, _] = useState(import.meta.env.VITE_BACKEND_WEBSOCKET_URL);
 
   const { currentUser } = useUserStore();
 
